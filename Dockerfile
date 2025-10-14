@@ -1,43 +1,17 @@
-# ----------------------------------------
-# Build stage - build the application
-# ----------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
+# Use the .NET 9.0 ASP.NET runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-preview
 
-WORKDIR /src
-
-# Copy solution and project files
-COPY "Merchant Service.sln" ./
-COPY "Merchant Service.csproj" ./
-
-# Restore dependencies
-RUN dotnet restore" Merchant Service.sln"
-
-# Copy the rest of the source code
-COPY . .
-
-
-# Publish the app to the /app directory
-RUN dotnet publish "Merchant Service.csproj" -c Release -o /app/publish
-
-# ----------------------------------------
-# Runtime stage - run the application
-# ----------------------------------------
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-preview AS runtime
-
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the published output from the build stage
-COPY --from=build /app/publish ./
+# Copy the published .NET app into the container
+COPY . .
 
-# Copy the SQLite database file (optional — if using prebuilt .db file)
-COPY --from=build appdata.db ./appdata.db
-
-# Expose the custom port your app listens on
+# Expose your app’s port (change if needed)
 EXPOSE 5235
 
-# Set environment variable for ASP.NET Core to listen on port 5235
+# Optional: set environment variable so ASP.NET knows what port to bind
 ENV ASPNETCORE_URLS=http://127.0.0.1:5235
 
-# Start the application
+# Run the .NET app
 ENTRYPOINT ["dotnet", "Merchant Service.dll"]
