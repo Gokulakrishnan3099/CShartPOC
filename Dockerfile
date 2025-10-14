@@ -7,7 +7,7 @@ WORKDIR /src
 
 # Copy solution and project files
 COPY Merchant Service.sln ./
-COPY CShartPOC/Merchant Service.csproj ./CShartPOC/
+COPY Merchant Service.csproj ./
 
 # Restore dependencies
 RUN dotnet restore Merchant Service.sln
@@ -17,7 +17,7 @@ COPY . .
 
 
 # Publish the app to the /app directory
-RUN dotnet publish CShartPOC/Merchant Service.csproj -c Release -o /app/publish
+RUN dotnet publish Merchant Service.csproj -c Release -o /app/publish
 
 # ----------------------------------------
 # Runtime stage - run the application
@@ -31,7 +31,7 @@ WORKDIR /app
 COPY --from=build /app/publish ./
 
 # Copy the SQLite database file (optional — if using prebuilt .db file)
-COPY --from=build /src/CShartPOC/appdata.db ./appdata.db
+COPY --from=build appdata.db ./appdata.db
 
 # Expose the custom port your app listens on
 EXPOSE 5235
