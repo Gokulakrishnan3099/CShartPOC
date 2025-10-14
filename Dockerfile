@@ -6,18 +6,18 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0-preview AS build
 WORKDIR /src
 
 # Copy solution and project files
-COPY Merchant Service.sln ./
-COPY Merchant Service.csproj ./
+COPY "Merchant Service.sln" ./
+COPY "Merchant Service.csproj" ./
 
 # Restore dependencies
-RUN dotnet restore Merchant Service.sln
+RUN dotnet restore" Merchant Service.sln"
 
 # Copy the rest of the source code
 COPY . .
 
 
 # Publish the app to the /app directory
-RUN dotnet publish Merchant Service.csproj -c Release -o /app/publish
+RUN dotnet publish "Merchant Service.csproj" -c Release -o /app/publish
 
 # ----------------------------------------
 # Runtime stage - run the application
@@ -40,4 +40,4 @@ EXPOSE 5235
 ENV ASPNETCORE_URLS=http://127.0.0.1:5235
 
 # Start the application
-ENTRYPOINT ["dotnet", "CShartPOC.dll"]
+ENTRYPOINT ["dotnet", "Merchant Service.dll"]
